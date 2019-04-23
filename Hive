@@ -1,0 +1,36 @@
+------------设置队列-----------------
+SET mapred.job.queue.name=queue_cmcs_hive;
+------------外部表改为内部表---------
+ALTER TABLE ods_mams_t_interface_logs SET TBLPROPERTIES('EXTERNAL'='False');
+
+-------------sql并发-------------------
+set mapred.job.queue.name = queue_cmcs_hive;
+set mapred.job.name = liuw003;
+set hive.exec.parallel=true;
+set hive.exec.parallel.thread.number=5;
+
+SET MAPRED.JOB.NAME=ex-liuw003;
+set hive.exec.dynamic.partition=true;
+--------------------------------------
+
+-------------------显示当前数据库-----------------
+set hive.cli.print.current.db=true;
+set hive.cli.print.header=true; 
+---------------------------------------------------
+
+----------同一脚本不是串行可以并行的参数-------------
+set hive.exec.dynamic.partition.mode=nonstrict;
+set hive.exec.dynamic.partition=true;
+-----------------------------------------------------
+
+----------------hive分区半静态半动态------------------
+set hive.exec.dynamici.partition=true;
+set hive.exec.dynamic.partition.mode=nonstrict;
+-------------------------------------------------------
+
+
+---------------------- 开启任务并行执行----------------
+set hive.exec.parallel=true;
+---------------- 同一个sql允许并行任务的最大线程数--------------
+set hive.exec.parallel.thread.number=8;
+=---------------------------------------------------------------
