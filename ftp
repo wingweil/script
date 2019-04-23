@@ -1,0 +1,84 @@
+http://blog.chinaunix.net/uid-24993824-id-470961.html
+
+#!/bin/bash
+ 
+# Time    : 2019/1/8 13:35
+# Author  : zhaozm001
+# File    : ftp_start.sh
+# Describe: 启动脚本
+#
+# Change: ex-liuw003 2019-04-11
+# Describe:判断ftp上是否有T-1的文件夹
+ 
+#打印日志
+print_log()
+{
+    current_time=$(date "+%Y-%m-%d %H:%M:%S")
+    echo "$current_time $@"
+}
+ 
+startsec=$(date +%s)
+ 
+source /data/etlscript/PUBLIC/SCRIPT/TOOL/scriptHelper.sh
+resoveJson $1
+checkLogPath $task_name
+exec &> $CMRH_DATAHUB_SCRIPT_LOG/$EXE_DATE/$task_name/$run_serial_no.log
+
+a=`date -d $(date "+%Y-%m-%d") +%w`
+##参数名定义
+job_path=$0
+sh_directory=`echo ${job_path%/*}`
+pdate=${inc_start:0:8}
+ftp_server=$src_ip
+ftp_user=$src_user
+ftp_pwd=$src_password
+ftp_port=$src_port
+gate=${p1}
+log_name=${p2}
+ftp_adm=${p3}
+ftp_data_rootdir=/nfsvol/cmcs_ftp/cmcs/$gate/${pdate}
+local_record=$sh_directory/record.log
+
+print_log 'week ==' $a
+print_log 'time == ' $time
+print_log "p1 :$p1"
+print_log "sh_directory :$sh_directory"
+print_log "p2 :$p2"
+print_log "p3 :$p3"
+print_log "pdate :${pdate}"
+print_log "ftp_server :$ftp_server"
+print_log "ftp_user :$ftp_user"
+print_log "src_port :$src_port"
+print_log "local_record :$local_record"
+print_log "ftp_data_rootdir :$ftp_data_rootdir"
+
+while true;
+do
+
+cat /dev/null > ${local_record}
+
+lftp $ftp_user:$ftp_pwd@$ftp_server:$p3 -e "cd ${ftp_data_rootdir};exit" > ${local_record} 2>&1
+return_result=`grep -c 'Failed to change directory' ${local_record}`
+  if [[ ${return_result} -eq 0 ]];then
+       echo "成员企业已上传文件！"
+       break
+   fi
+   print_log 'waiting...'
+   sleep 10m
+
+done
+
+print_log '==============start job============='
+
+if [ -e ${local_record} ];then
+   rm ${local_record}
+   else
+   echo "检查日志文件已删除"
+fi
+
+endsec=$(date +%s)
+message="脚本耗时: $[ endsec-startsec ] 秒"
+echo $message
+ 
+# 回传状态给datahub
+callDatahub 0 "$message" "$run_serial_no" "$task_name"
