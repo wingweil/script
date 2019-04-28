@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# start_time: 2019-01-07 00:00
-# end_time: 9999-12-31 00:00
-# frequency:  day
-# author: 
-# description: ods层与dwd层表结构/详细信息监控
-# create_time: 2019-01-07
-# change:2019-03-18 新增coscp库四张表
 
 #打印日志
 print_log()
@@ -390,7 +383,6 @@ drop table if exists ads_cmwt_table_clomns_lw_tmp;
 drop table if exists ads_cmwt_table_analysis_lw_tmp;
 
 ";
-exitCodeCheck $? $startsec $run_serial_no $task_name
 
 
 cd $start_path
@@ -422,7 +414,6 @@ sqoop eval \
 --query "delete from t_metedata_analysis where substr(updated_time,1,10) = substr(current_date(),1,10);"
 
 
-exitCodeCheck $? $startsec $run_serial_no $task_name
 
 sqoop export \-D mapred.job.queue.name=sqoop \
 --connect $mysqljdbc \
@@ -435,7 +426,6 @@ sqoop export \-D mapred.job.queue.name=sqoop \
 --input-null-non-string '\\N' \
 --columns="db_name,table_name,column_name,column_type,column_comment,updated_time"
 
-exitCodeCheck $? $startsec $run_serial_no $task_name
 
 sqoop export \-D mapred.job.queue.name=sqoop \
 --connect $mysqljdbc \
@@ -448,14 +438,4 @@ sqoop export \-D mapred.job.queue.name=sqoop \
 --input-null-non-string '\\N' \
 --columns="db_name,table_name,analysis_dimension,analysis_result,updated_time"
 
-
-exitCodeCheck $? $startsec $run_serial_no $task_name
-### 代码段-结束
-## 结束任务 ###################################
-endsec=$(date +%s)
-message="脚本耗时: $[ endsec-startsec ] 秒"
-echo $message
-
-# 回调 调度系统
-callDatahub 0 "$message" "$run_serial_no" "$task_name"
 
