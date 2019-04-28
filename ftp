@@ -1,13 +1,5 @@
 #!/bin/bash
  
-# Time    : 2019/1/8 13:35
-# Author  : zhaozm001
-# File    : ftp_start.sh
-# Describe: 启动脚本
-#
-# Change: ex-liuw003 2019-04-11
-# Describe:判断ftp上是否有T-1的文件夹
- 
 #打印日志
 print_log()
 {
@@ -74,12 +66,6 @@ if [ -e ${local_record} ];then
    echo "检查日志文件已删除"
 fi
 
-endsec=$(date +%s)
-message="脚本耗时: $[ endsec-startsec ] 秒"
-echo $message
- 
-# 回传状态给datahub
-callDatahub 0 "$message" "$run_serial_no" "$task_name"
 
 
 http://blog.chinaunix.net/uid-24993824-id-470961.html
