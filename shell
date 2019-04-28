@@ -1,0 +1,4 @@
+shell查看后台任务：
+ps aux
+shell杀死后天任务：
+kill -9 pid
