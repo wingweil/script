@@ -32,16 +32,16 @@ business=""
 date=""
 member=""
 message=""
-cmwt_host="cmwt.cmft.com"
+cmwt_host="###.####.com"
 # 默认端口
 cmwt_port=8060
 
 if [[ $cmwt_host == *cmwt* ]];then
     url='https://'$cmwt_host'/cmwt/handleInfo'
 else
-    url='http://'$cmwt_host':'$cmwt_port'/cmwt/handleInfo'
+    url='http://'$cmwt_host':'$port'/###/handleInfo'
 fi
-callcmwt(){
+callwqe(){
   curl -X POST ${url} \
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
@@ -68,7 +68,7 @@ return_result=`grep -c 'Failed to change directory' ${local_record}`
        break
    fi
    print_log 'waiting...'
-   callcmwt
+   callwqe
    sleep 10m
 
 done
