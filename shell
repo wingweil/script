@@ -2,3 +2,17 @@ shell查看后台任务：
 ps aux
 shell杀死后天任务：
 kill -9 pid
+
+
+#shell for cut
+info='abcd;efgh'
+fstr=`echo $info | cut -d \; -f 1`
+sstr=`echo $info | cut -d \; -f 2`
+
+for line in $(cat wget_text.txt)
+do
+  fstr=`echo $line | cut -d \, -f 1`
+  echo $fstr
+  sstr=`echo $line | cut -d \, -f 2`
+  echo $sstr
+done
